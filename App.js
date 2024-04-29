@@ -9,24 +9,36 @@ import {
   SafeAreaView,
 } from "react-native";
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {NavigationContainer} from "@react-navigation/native";
 import HomeScreen from "./components/homescreen";
 import SettingsScreen from "./components/settingscreen";
 import NotesScreen from "./components/notesScreen";
+import AddNoteScreen from "./components/AddNoteScreen";
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function NotesStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Notes" component={NotesScreen} />
+      <Stack.Screen name="AddNewNote" component={AddNoteScreen} />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
-  
-
   return (
     <SafeAreaView style={styles.container}>
-      <NavigationContainer style={{ flex: 0.1, backgroundColor: "maroon" }}>
+      <NavigationContainer style={{ flex: 0.1, backgroundColor: 'maroon' }}>
         <Tab.Navigator>
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
-          <Tab.Screen name="Notes" component={NotesScreen} />
+          <Tab.Screen name="Notes" component={NotesStack} />
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaView>
@@ -35,9 +47,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop: 30,
     flex: 1,
-    backgroundColor: "red",
-    flexDirection: "column",
+    backgroundColor: 'red',
+    flexDirection: 'column',
   },
 });

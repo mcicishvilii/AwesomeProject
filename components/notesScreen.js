@@ -9,56 +9,36 @@ import {
   SafeAreaView,
 } from "react-native";
 
+
+import React, { useState, useEffect } from "react";
+import { createNote, readNotes, updateNote, deleteNote } from "./db/dao";
+import { useNavigation } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/Ionicons";
 import ActionButton from "react-native-action-button";
 
-const DATA = [
-  {
-    id: "1",
-    imageUrl: "https://picsum.photos/200",
-    title: "Cat",
-  },
-  {
-    id: "2",
-    imageUrl: "https://picsum.photos/200",
-    title: "Archway",
-  },
+export default function wNotesScreen() {
+  const navigation = useNavigation();
+  const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
-  {
-    id: "3",
-    imageUrl: "https://picsum.photos/200",
-    title: "Cat",
-  },
-  {
-    id: "4",
-    imageUrl: "https://picsum.photos/200",
-    title: "Archway",
-  },
+  const getNotes = async () => {
+    const allNotes = await readNotes();
+    setNotes(allNotes);
+  };
 
-  {
-    id: "5",
-    imageUrl: "https://picsum.photos/200",
-    title: "Cat",
-  },
-  {
-    id: "6",
-    imageUrl: "https://picsum.photos/200",
-    title: "Archway",
-  },
+  useEffect(() => {
+    getNotes();
+  }, []);
 
-  {
-    id: "7",
-    imageUrl: "https://picsum.photos/200",
-    title: "Cat",
-  },
-  {
-    id: "8",
-    imageUrl: "https://picsum.photos/200",
-    title: "Archway",
-  },
-];
-
-export default function NotesScreen() {
+  const handleAddNote = async () => {
+    if (title && content) {
+      await createNote(title, content);
+      setTitle("asdasd");
+      setContent("aasdasd");
+      getNotes();
+    }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.listItem}>
@@ -88,17 +68,19 @@ export default function NotesScreen() {
 
       <View style={styles.mainContent}>
         <FlatList
-          data={DATA}
+          data={notes} // Use notes state variable here
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={() => (
+            // Display if no notes
+            <Text style={styles.listText}>No notes yet!</Text>
+          )}
         />
       </View>
       <ActionButton
         buttonColor="rgba(231,76,60,1)"
-        onPress={() => {
-          alert("Add Note");
-        }}
+        onPress={() => navigation.navigate('AddNewNote')}
       />
     </SafeAreaView>
   );
