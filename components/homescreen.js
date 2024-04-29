@@ -69,52 +69,54 @@ export default function HomeScreen()  {
   // ... Your settings screen content
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.topAppBarRowStyle}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-        />
-
-        {/* Spacer to push center icon */}
-        <View style={{ flex: 1 }} />
-
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-        />
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-        />
+      <View style={[styles.topAppBarRowStyle, { alignItems: 'center' }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: 'https://reactnative.dev/img/tiny_logo.png',
+            }}
+          />
+          <View style={{ flex: 1 }} />
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: 'https://reactnative.dev/img/tiny_logo.png',
+            }}
+          />
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: 'https://reactnative.dev/img/tiny_logo.png',
+            }}
+          />
+        </View>
       </View>
 
       {/* "Chats" top title*/}
-      <View style={{ flex: 0.08, backgroundColor: "yellow" }}>
-        <Text style={{ fontSize: 40 }}>Chats</Text>
+      <View style={[styles.chatsHeader, { alignItems: 'start' }]}>
+        <View style={{ alignItems: 'baseline' }}>
+          <Text style={styles.chatsHeaderText}>Chats</Text>
+        </View>
       </View>
 
       {/* search bar*/}
-      <View style={{ flex: 0.05, backgroundColor: "green" }}>
+      <View style={[styles.searchBarContainer, { alignItems: 'start' }]}>
         <TextInput
-          style={styles.input}
+          style={styles.searchBar}
           onChangeText={onChangeText}
           value={text}
+          placeholder="Search here"
         />
       </View>
 
       {/* main content */}
-      <View style={{ flex: 0.7, backgroundColor: "grey" }}>
+      <View style={styles.mainContent}>
         <FlatList
           data={DATA}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          style={styles.listContainer}
+          contentContainerStyle={styles.listContainer}
         />
       </View>
     </SafeAreaView>
@@ -123,12 +125,9 @@ export default function HomeScreen()  {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
     flex: 1,
     backgroundColor: "red",
-    flexDirection: "column",
   },
-
 
   textStyle: {
     backgroundColor: "blue",
@@ -141,15 +140,35 @@ const styles = StyleSheet.create({
     height: 40,
   },
 
+  chatsHeader: {
+    backgroundColor: "yellow",
+    paddingVertical: 10,
+  },
+  chatsHeaderText: {
+    fontSize: 40,
+  },
+  searchBarContainer: {
+    backgroundColor: 'green',
+    paddingVertical: 10, // Add some vertical padding for spacing
+  },
+  searchBar: {
+    flex: 1,
+    backgroundColor: 'grey',
+    color: 'red',
+    borderRadius: 5,
+    padding: 20,
+  },
   topAppBarRowStyle: {
-    flex: 0.07,
-    backgroundColor: "blue",
-    flexDirection: "row",
+    backgroundColor: 'blue',
+    paddingVertical: 10, // Add some vertical padding for spacing
   },
 
+  mainContent: {
+    flex: 1,
+    backgroundColor: 'grey',
+  },
   listContainer: {
-    flex: 0.7,
-    backgroundColor: "grey",
+    paddingVertical: 10,
   },
   listItem: {
     flexDirection: "row",
