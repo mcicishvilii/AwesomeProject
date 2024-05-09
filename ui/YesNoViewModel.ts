@@ -5,29 +5,45 @@ export class YesNoViewModel {
   constructor(private fetchYesNoUseCase: FetchYesNoData) {
     this.state = {
       data: null,
-      isLoading: true, // Set initial loading state to true
+      isLoading: true,
       error: null,
     };
+    this.subscribers = [];
   }
 
   state = {
     data: null,
-    isLoading: true, // Set initial loading state to true
+    isLoading: true,
     error: null,
   };
 
+  subscribers = [];
+
   setState = (newState) => {
     this.state = { ...this.state, ...newState };
+    this.notifySubscribers();
+  };
+
+  subscribe = (callback) => {
+    this.subscribers.push(callback);
+  };
+
+  unsubscribe = (callback) => {
+    this.subscribers = this.subscribers.filter((sub) => sub !== callback);
+  };
+
+  notifySubscribers = () => {
+    this.subscribers.forEach((callback) => callback(this.state));
   };
 
   async fetchData() {
-    this.setState({ isLoading: true, error: null }); // Set loading state to true before fetching
+    this.setState({ isLoading: true, error: null });
 
     try {
       const data = await this.fetchYesNoUseCase.execute();
-      this.setState({ data, isLoading: false }); // Set loading state to false after fetching
+      this.setState({ data, isLoading: false });
     } catch (error) {
-      this.setState({ error: error.message, isLoading: false }); // Set loading state to false on error
+      this.setState({ error: error.message, isLoading: false });
     }
   }
 

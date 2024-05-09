@@ -1,18 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 
 const NotesScreen = ({ viewModel }) => {
+  const [state, setState] = useState(viewModel.state);
+
   useEffect(() => {
     viewModel.fetchData();
+    viewModel.subscribe(setState);
+
+    return () => {
+      viewModel.unsubscribe(setState);
+    };
   }, []);
 
   const renderContent = () => {
-    const isLoading = viewModel.getIsLoading();
-    const error = viewModel.getError();
-    const data = viewModel.getData();
+    const { isLoading, error, data } = state;
 
     if (isLoading) {
-      return <ActivityIndicator size="large" color="#0000ff" />; // Render loading indicator
+      return <ActivityIndicator size="large" color="#0000ff" />;
     }
 
     if (error) {
