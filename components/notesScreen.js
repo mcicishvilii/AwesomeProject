@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import "whatwg-fetch";
-
+// test
 export default function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
