@@ -13,7 +13,6 @@ import {NavigationContainer} from "@react-navigation/native";
 import HomeScreen from "./components/homescreen";
 import SettingsScreen from "./components/settingscreen";
 import NotesScreen from "./components/notesScreen";
-import AddNoteScreen from "./components/AddNoteScreen";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -26,7 +25,6 @@ function NotesStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Notes" component={NotesScreen} />
-      <Stack.Screen name="AddNewNote" component={AddNoteScreen} />
     </Stack.Navigator>
   );
 }

@@ -1,129 +1,83 @@
 import {
   StyleSheet,
   Text,
-  Image,
-  TextInput,
-  FlatList,
-  Button,
   View,
-  SafeAreaView,
+  TextInput,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
 } from "react-native";
-
-
 import React, { useState, useEffect } from "react";
-import { createNote, readNotes, updateNote, deleteNote } from "./db/dao";
-import { useNavigation } from '@react-navigation/native';
-import Icon from "react-native-vector-icons/Ionicons";
-import ActionButton from "react-native-action-button";
+import "whatwg-fetch";
 
-export default function wNotesScreen() {
-  const navigation = useNavigation();
-  const [notes, setNotes] = useState([]);
+export default function App() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const getNotes = async () => {
-    const allNotes = await readNotes();
-    setNotes(allNotes);
-  };
+  const [body, setBody] = useState("");
+  const url = "https://yesno.wtf/api";
 
   useEffect(() => {
-    getNotes();
+    fetch(url)
+      .then((resp) => resp.json())
+      .then((json) => {
+        console.log("API response:", json);
+        setData(json);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   }, []);
 
-  const handleAddNote = async () => {
-    if (title && content) {
-      await createNote(title, content);
-      setTitle("asdasd");
-      setContent("aasdasd");
-      getNotes();
-    }
-  };
-
-  const renderItem = ({ item }) => (
-    <View style={styles.listItem}>
-      <Image source={{ uri: item.imageUrl }} style={styles.listImage} />
-      <Text style={styles.listText}>{item.title}</Text>
-    </View>
-  );
-
   return (
-    <SafeAreaView style={styles.container}>
-      {/* "Chats" top title*/}
-      <View style={[styles.chatsHeader, { alignItems: "start" }]}>
-        <View style={{ alignItems: "baseline", backgroundColor: "yellow" }}>
-          <Text style={styles.chatsHeaderText}>Notes</Text>
-        </View>
-        <View style={{ flexDirection: "row", backgroundColor: "green" }}>
-          <Image
-            style={{ marginEnd: 20 }}
-            source={require("/home/mcici/Desktop/myProj/AwesomeProject/assets/favicon.png")}
-          />
-          <Image
-            style={styles.tinyLogo}
-            source={require("/home/mcici/Desktop/myProj/AwesomeProject/assets/favicon.png")}
-          />
-        </View>
-      </View>
-
-      <View style={styles.mainContent}>
-        <FlatList
-          data={notes} // Use notes state variable here
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-          ListEmptyComponent={() => (
-            // Display if no notes
-            <Text style={styles.listText}>No notes yet!</Text>
-          )}
-        />
-      </View>
-      <ActionButton
-        buttonColor="rgba(231,76,60,1)"
-        onPress={() => navigation.navigate('AddNewNote')}
-      />
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <>
+          <View>
+            {data && data.answer ? (
+              <View>
+                <Text>Answer: {data.answer}</Text>
+                <Text>Forced: {data.forced ? "true" : "false"}</Text>
+                <Image
+                  source={{ uri: data.image }}
+                  style={{ width: 200, height: 200 }}
+                />
+              </View>
+            ) : (
+              <Text>No data available</Text>
+            )}
+          </View>
+        </>
+      )}
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
-    flexDirection: "column",
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1",
+    padding: 8,
   },
-
-  chatsHeader: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    backgroundColor: "grey",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
-  chatsHeaderText: {
-    fontSize: 40,
+  author: {
+    fontSize: 30,
+    color: "green",
   },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: "white",
-  },
-
-  listContainer: {
-    paddingVertical: 10,
-  },
-  listItem: {
-    flexDirection: "row",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  listImage: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  listText: {
-    fontSize: 18,
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginVertical: 8,
+    paddingHorizontal: 8,
   },
 });
