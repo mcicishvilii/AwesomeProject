@@ -23,17 +23,18 @@ const viewModel = new YesNoViewModel(fetchYesNoDataUseCase);
 
 function NotesStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Notes" component={() => <NotesScreen viewModel={viewModel} />} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="NotesScreen" options={{ headerTitle: 'Notes' }}>
+        {() => <NotesScreen viewModel={viewModel} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
-
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer style={{ flex: 0.1, backgroundColor: 'maroon' }}>
-        <Tab.Navigator>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
           <Tab.Screen name="Notes" component={NotesStack} />
