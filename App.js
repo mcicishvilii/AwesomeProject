@@ -1,16 +1,17 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from "react";
+import { StyleSheet, SafeAreaView } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/homescreen";
-import SettingsScreen from '/home/mcici/Desktop/myProj/AwesomeProject/ui/components/settingscreen';
-import NotesScreen from '/home/mcici/Desktop/myProj/AwesomeProject/ui/components/notesScreen';
+import SettingsScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/settingscreen";
+import NotesScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/notesScreen";
+import DetailsScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/DetailsScreen";
 
-import { YesNoApiClientImpl } from './data/YesNoApiClientImpl';
-import { YesNoRepositoryImpl } from './data/YesNoRepository';
-import { FetchYesNoData } from './domain/FetchYesNoDataUseCase';
+import { YesNoApiClientImpl } from "./data/YesNoApiClientImpl";
+import { YesNoRepositoryImpl } from "./data/YesNoRepository";
+import { FetchYesNoData } from "./domain/FetchYesNoDataUseCase";
 import { YesNoViewModel } from "./ui/YesNoViewModel";
 
 const Tab = createBottomTabNavigator();
@@ -24,16 +25,17 @@ const viewModel = new YesNoViewModel(fetchYesNoDataUseCase);
 function NotesStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="NotesScreen" options={{ headerTitle: 'Notes' }}>
-        {() => <NotesScreen viewModel={viewModel} />}
+      <Stack.Screen name="NotesScreen" options={{ headerTitle: "Notes" }}>
+        {(props) => <NotesScreen {...props} viewModel={viewModel} />}
       </Stack.Screen>
+      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
     </Stack.Navigator>
   );
 }
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <NavigationContainer style={{ flex: 0.1, backgroundColor: 'maroon' }}>
+      <NavigationContainer style={{ flex: 0.1, backgroundColor: "maroon" }}>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
@@ -47,7 +49,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
-    flexDirection: 'column',
+    backgroundColor: "red",
+    flexDirection: "column",
   },
 });

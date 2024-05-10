@@ -1,7 +1,8 @@
+import { Button } from '@rneui/base';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 
-const NotesScreen = ({ viewModel }) => {
+const NotesScreen = ({ viewModel, navigation }) => {
   const [state, setState] = useState(viewModel.state);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const NotesScreen = ({ viewModel }) => {
     const { isLoading, error, data } = state;
 
     if (isLoading) {
-      return <ActivityIndicator size="large" color ="#0000ff" />;
+      return <ActivityIndicator size="large" color="#0000ff" />;
     }
 
     if (error) {
@@ -26,10 +27,11 @@ const NotesScreen = ({ viewModel }) => {
 
     if (data) {
       return (
-        <View>
+        <View style={styles.insideCont}>
           <Text>Answer: {data.answer}</Text>
-          <Text>Forced: {data.forced ? 'true' : 'false'}</Text>
+          <Text>Forced: {data.forced ? 'true' : ' false'}</Text>
           <Image source={{ uri: data.image }} style={styles.image} />
+          <Button title="Next" onPress={() => navigation.navigate('DetailsScreen')} />
         </View>
       );
     }
@@ -43,6 +45,12 @@ const NotesScreen = ({ viewModel }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  insideCont: {
+    padding: 10,
+    backgroundColor: 'green',
     justifyContent: 'center',
     alignItems: 'center',
   },
