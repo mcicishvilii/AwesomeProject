@@ -4,10 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import HomeScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/homescreen";
-import SettingsScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/settingscreen";
-import NotesScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/notesScreen";
-import DetailsScreen from "/home/mcici/Desktop/myProj/AwesomeProject/ui/components/DetailsScreen";
+import HomeScreen from "./ui/components/homescreen";
+import SettingsScreen from "./ui/components/settingscreen";
+import NotesScreen from "./ui/components/notesScreen";
+import DetailsScreen from "./ui/components/DetailsScreen";
 
 import { YesNoApiClientImpl } from "./data/YesNoApiClientImpl";
 import { YesNoRepositoryImpl } from "./data/YesNoRepository";
