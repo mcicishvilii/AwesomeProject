@@ -45,7 +45,7 @@ const SettingsScreen = ({ navigation }) => {
           onEndReachedThreshold={0.5}
           onEndReached={() => (pageNow < totalPages ? setPageNow(pageNow + 1) : null)}
           renderItem={({ item }) => (
-            <View style={styles.itemContainer}>
+            <View style={styles.itemContainer} key={item.id}>
               <Image source={{ uri: item.avatar }} style={styles.avatar} />
               <View style={styles.textContainer}>
                 <Text style={styles.name}>
@@ -55,6 +55,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </View>
           )}
+          keyExtractor={(item) => item.id.toString()}
         />
         <Button title="Refresh Data" onPress={() => navigation.navigate("NotesScreen")} />
       </View>
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    // alignItems: "center",
   },
   contentContainer: {
     flex: 1,
