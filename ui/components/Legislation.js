@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'; // Import Alert
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import axios from 'axios';
+import RNFS from 'react-native-fs';
 
 const Legislation = () => {
   const [menuNames, setMenuNames] = useState([]);
@@ -18,14 +19,34 @@ const Legislation = () => {
     }
   };
 
-  const handleMenuItemPress = (pdfText) => {
-    Alert.alert('PDF Text', pdfText);
+  const handleMenuItemPress = async (pdfUrl, pdfTitle) => {
+    try {
+      const filePath = `${RNFS.DocumentDirectoryPath}/${pdfTitle}.pdf`;
+      console.log('PDF URL:', pdfUrl);
+      console.log('File Path:', filePath);
+  
+      const { promise } = RNFS.downloadFile({
+        fromUrl: pdfUrl,
+        toFile: filePath,
+      });
+  
+      promise.then((res) => {
+        console.log('Download Response:', res);
+        Alert.alert('Download Successful', `PDF has been downloaded to ${res.filePath}`);
+      }).catch((err) => {
+        console.error('Download Error:', err);
+        Alert.alert('Download Error', 'Failed to download PDF');
+      });
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      Alert.alert('Download Error', 'Failed to download PDF');
+    }
   };
 
   const renderMenuItem = ({ item }) => (
     <TouchableOpacity
       style={styles.menuItemContainer}
-      onPress={() => handleMenuItemPress(item.pdf)}
+      onPress={() => handleMenuItemPress(item.pdf, item.pdf_title)}
     >
       <Text style={styles.menuName}>{item.menu_name}</Text>
       <View style={styles.downloadButton}>
@@ -55,15 +76,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 8,
-    borderRadius: 5, // Add border radius for rounded corners
-    backgroundColor: '#f5f5f5', // Light gray background
-    borderWidth: 1, // Thin border
-    borderColor: '#e0e0e0', // Light gray border color
+    borderRadius: 5,
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   menuName: {
     fontSize: 18,
     fontWeight: 'bold',
-    paddingHorizontal: 10, // Add padding for better spacing within border
+    paddingHorizontal: 10,
   },
   downloadButton: {
     flexDirection: 'row',
@@ -77,5 +98,5 @@ const styles = StyleSheet.create({
     height: 20,
   },
 });
-r
+
 export default Legislation;
