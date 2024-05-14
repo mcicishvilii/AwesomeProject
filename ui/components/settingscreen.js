@@ -10,37 +10,52 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
-
-
-const itemsPerPage = 16;
-
 const SettingsScreen = ({ navigation }) => {
-  const [totalPages, setTotalpages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [items, setItems] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
+  const [data, setState] = useState([]);
+  const [pageNow, setPageNow] = useState(1);
+
+  const fetchReqres = () => {
+    fetch(`https://reqres.in/api/users?page=${pageNow}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setState((prevState) => [...prevState, ...json.data]);
+        setTotalPages(json.total_pages);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage]);
-  
-  async function fetchData() {
-    setRefreshing(true);
-    try {
-      let response = await fetcher(currentPage, itemsPerPage);
-      setTotalpages(response.metadata.total / itemsPerPage);
-      let data: [] = response.results;
-      setItems(data);
-      setRefreshing(false);
-    } catch (error) {
-      setRefreshing(false);
-      console.log(error);
-    }
-  }
+    fetchReqres();
+  }, [pageNow]);
+
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
+        <FlatList
+          data={data}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => (pageNow < totalPages ? setPageNow(pageNow + 1) : null)}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <Image source={{ uri: item.avatar }} style={styles.avatar} />
+              <View style={styles.textContainer}>
+                <Text style={styles.name}>
+                  {item.first_name} {item.last_name}
+                </Text>
+                <Text style={styles.email}>{item.email}</Text>
+              </View>
+            </View>
+          )}
+        />
         <Button title="Refresh Data" onPress={() => navigation.navigate("NotesScreen")} />
       </View>
     </View>
@@ -71,6 +86,30 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  name: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  email: {
+    fontSize: 14,
+    color: '#888',
   },
 });
 
