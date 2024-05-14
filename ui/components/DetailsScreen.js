@@ -68,9 +68,14 @@ const NotesScreen = ({ navigation }) => {
           value={description}
           onChangeText={setDescription}
         />
-        <TouchableOpacity style={styles.addButton} onPress={addNote}>
+        {/* <TouchableOpacity style={styles.addButton} onPress={addNote}>
+          <Text style={styles.addButtonText}>Add Note</Text>
+        </TouchableOpacity> */}
+
+        <TouchableOpacity style={styles.addButton} onPress={navigation.navigate("NewsComponent")}>
           <Text style={styles.addButtonText}>Add Note</Text>
         </TouchableOpacity>
+
       </View>
     </KeyboardAvoidingView>
   );
